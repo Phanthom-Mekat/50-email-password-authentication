@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const Register = () => {
     const [errorMessage, setErrorMessage] = useState('')
-
+    const [success, setSuccess] = useState(false)
     const handleForm=(e)=>{
         e.preventDefault();
         const email = e.target.email.value
@@ -12,14 +12,47 @@ const Register = () => {
         console.log(email,password)
 
         setErrorMessage('')
+        setSuccess(false)
+        // dont send error to server side handle it here where we know it will get error anyway
+        if(password.length<6){
+            setErrorMessage('Password should be at least 6 characters')
+            return
+        }
+        // regex regular expression here 
+        // const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!/(?=.*[A-Z])/.test(password)) {
+            setErrorMessage("Password must contain at least one uppercase letter.");
+            return false;
+          }
+          if (!/(?=.*[a-z])/.test(password)) {
+            setErrorMessage("Password must contain at least one lowercase letter.");
+            return false;
+          }
+          if (!/(?=.*\d)/.test(password)) {
+            setErrorMessage("Password must contain at least one digit.");
+            return false;
+          }
+          if (!/(?=.*[@$!%*?&])/.test(password)) {
+            setErrorMessage("Password must contain at least one special character (@$!%*?&).");
+            return false;
+          }
+          if (password.length < 8) {
+            setErrorMessage("Password must be at least 8 characters long.");
+            return false;
+          }
+
+
+
         // create user with password authentication
         createUserWithEmailAndPassword(auth,email,password)
         .then(result=>{
             console.log(result.user)
+            setSuccess(true)
         })
         .catch(error=>{
             console.log('ERROR',error)
             setErrorMessage(error.message)
+            setSuccess(false)
         })
 
     }
@@ -57,6 +90,9 @@ const Register = () => {
                 <button className="btn btn-accent btn-wide">Register</button>
                 {
                     errorMessage && <p className="text-red-600">{errorMessage}</p>
+                }
+                {
+                    success && <p className="text-green-500">Sign Up Successful</p>
                 }
             </form>
         </div>
