@@ -14,7 +14,7 @@ const Register = () => {
         const password = e.target.password.value
         const terms = e.target.terms.checked
         console.log(email, password,terms)
-
+        
         setErrorMessage('')
         setSuccess(false)
         // dont send error to server side handle it here where we know it will get error anyway

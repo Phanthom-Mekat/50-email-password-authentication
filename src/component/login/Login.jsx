@@ -4,20 +4,24 @@ import { auth } from "../../firebase.init";
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = useState('')
+    const [success, setSuccess] = useState(false)
     const handleForm = (e) => {
         e.preventDefault();
         const email = e.target.email.value
         const password = e.target.password.value
         console.log(email, password)
         setErrorMessage('')
+        setSuccess(false)
         // create user with password authentication
         signInWithEmailAndPassword(auth, email, password)
             .then(result => {
                 console.log(result.user)
+                setSuccess(true)
             })
             .catch(error => {
                 console.log('ERROR', error)
                 setErrorMessage(error.message)
+                setSuccess(false)
             })
     }
     return (
@@ -57,10 +61,13 @@ const Login = () => {
                     {
                         errorMessage && <p className="text-red-600">{errorMessage}</p>
                     }
+                    {
+                        success && <p className="text-green-500">Login Successful</p>
+                    }
                 </form>
             </div>
         </div>
-            );
+    );
 };
 
 export default Login;
